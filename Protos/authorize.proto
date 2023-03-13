@@ -5,7 +5,7 @@ import "google/protobuf/timestamp.proto";
 
 service AuthorizeService{
   rpc SingIn(SingInRequest) returns (UserResponse);
-    rpc SingInByToken (SingInByTokenRequest) returns (UserResponse);
+  rpc SingInByToken (SingInByTokenRequest) returns (UserResponse);
 }
 
 message SingInRequest{

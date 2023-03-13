@@ -4,7 +4,7 @@ namespace Server.Backend.Secure
 {
     public class TokenMaker
     {
-        public  Task<string> MakeSha256Hash(string string_for_hash)
+        private static Task<string> MakeSha256Hash(string string_for_hash)
         {
             return  Task.Run(() => 
             {
@@ -17,6 +17,11 @@ namespace Server.Backend.Secure
                 }
                 return hash;
             });
+        }
+        public static string GetUserToken(string login,string password)
+        {
+
+            return MakeSha256Hash(login + password).Result;
         }
     }
 }
