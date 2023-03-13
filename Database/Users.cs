@@ -6,6 +6,7 @@ using Npgsql;
 using Server.Backend;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Server.Services.Authorization;
+using Basetypes;
 
 namespace Server.Database
 {
@@ -34,7 +35,7 @@ namespace Server.Database
                     await db.SaveChangesAsync();
 
 
-                    await CreateUserPostTable(user_token);
+                 //   await CreateUserPostTable(user_token);
                 }
                 catch (DbUpdateException ex)
                 {
@@ -52,7 +53,7 @@ namespace Server.Database
             using (IntacNetRuContext db = new IntacNetRuContext())
             {
 
-                var selected_user = db.Users.Where(user => user.Login == login && user.Password == password).First();
+                var selected_user = db.Users.Where(user => user.Login == login && user.Password == password).FirstOrDefault();
 
                 if (selected_user == null)
                 {
@@ -87,6 +88,7 @@ namespace Server.Database
             }
         }
 
+        // Пусть будет, но EF позволяет не делать
         private static async Task CreateUserPostTable(string user_token)
         {
             await using (var conn = new NpgsqlConnection(new ConfigManager().GetConnetion()))
@@ -121,6 +123,22 @@ namespace Server.Database
             if (user.Company == "")
                 return 0;
             return 1;
+        }
+
+        // return id of new Post
+        // Пусть останется как заготовка, не уверен, что entity будет эффективен 
+        // на огромном массиве данных в БД
+        public static Task<int> UpdateUserPostSequence(string user_token)
+        {
+            return Task.FromResult(0);
+        }
+
+        public static ICollection<Models.Post> GetAllUserPosts(User user)
+        {
+            using(IntacNetRuContext db = new IntacNetRuContext()) 
+            {
+                return db.Users.Where(u => u.Id == user.Id).First().Posts;
+            }
         }
     }
 }

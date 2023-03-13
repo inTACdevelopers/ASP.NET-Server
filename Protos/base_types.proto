@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package basetypes; 
+import "google/protobuf/timestamp.proto";
+
+message BaseResponse{
+  string state = 1;
+  int32 code = 2;
+}
+
+message UserResponse{
+  int32 code = 1;
+  string state = 2;
+  int32 user_type = 3;
+
+  int32 id = 4;
+  string login = 5;
+  string password = 6;
+  string name = 7;
+  string surname = 8;
+  string company = 9;
+  string about =10;
+  google.protobuf.Timestamp birth = 11;
+  bytes token = 12;
+}
+ 
+message Post{
+  repeated bytes photos = 1;
+  string post_title = 2;
+  string post_description = 3;
+  string url = 4;
+  int32 user_id = 5;
+}

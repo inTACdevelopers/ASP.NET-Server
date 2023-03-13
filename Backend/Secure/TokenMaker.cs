@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using Server.Models;
+using System.Security.Cryptography;
 using System.Text;
 namespace Server.Backend.Secure
 {
@@ -18,10 +19,15 @@ namespace Server.Backend.Secure
                 return hash;
             });
         }
+        
         public static string GetUserToken(string login,string password)
         {
-
             return MakeSha256Hash(login + password).Result;
+        }
+
+        public static string GetPostToken(Post post)
+        {
+            return MakeSha256Hash(post.Id.ToString() + post.Title).Result;
         }
     }
 }

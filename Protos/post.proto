@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "Protos/base_types.proto";
+
+
+service postMaker{
+  rpc makePost(makePostRequest) returns (basetypes.BaseResponse);
+}
+
+service postGetter{
+	rpc GetPost(GetPostRequest) returns (basetypes.Post);
+}
+
+service PostWorker{
+	rpc LikePost(LikePostRequest) returns (basetypes.BaseResponse);
+	rpc UnLikePost(UnLikePostRequest) returns (basetypes.BaseResponse);
+}
+
+message makePostRequest{
+  repeated bytes photos = 1; // many photos also may be 
+  string post_title = 2;
+  string post_description = 3;
+  string url = 4;
+  int32 user_id = 5;
+}
+
+message GetPostRequest{
+
+}
+
+message LikePostRequest{
+
+}
+
+message UnLikePostRequest{
+
+}
+

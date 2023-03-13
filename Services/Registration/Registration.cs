@@ -41,7 +41,7 @@ namespace Server.Services.Registration
                 Code = code,
                 State = state,
                 Token = Google.Protobuf.ByteString.CopyFrom(Encoding.UTF8.GetBytes(user_token))
-            }); ;
+            }); 
         }
     }
 }

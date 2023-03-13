@@ -1,11 +1,11 @@
 syntax = "proto3";
 
 
-import "google/protobuf/timestamp.proto";
+import "Protos/base_types.proto";
 
 service AuthorizeService{
-  rpc SingIn(SingInRequest) returns (UserResponse);
-  rpc SingInByToken (SingInByTokenRequest) returns (UserResponse);
+  rpc SingIn(SingInRequest) returns (basetypes.UserResponse);
+  rpc SingInByToken (SingInByTokenRequest) returns (basetypes.UserResponse);
 }
 
 message SingInRequest{
@@ -18,19 +18,3 @@ message SingInByTokenRequest{
   bytes token = 1;
 }
 
-
-message UserResponse{
-  int32 code = 1;
-  string state = 2;
-  int32 user_type = 3;
-
-  int64 id = 4;
-  string login = 5;
-  string password = 6;
-  string name = 7;
-  string surname = 8;
-  string company = 9;
-  string about =10;
-  google.protobuf.Timestamp birth = 11;
-  bytes token = 12;
-}
