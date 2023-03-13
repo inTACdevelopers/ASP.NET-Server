@@ -20,15 +20,12 @@ namespace Server.Services.Registration
             _logger.LogInformation("Registration request");
 
 
-
             string state = "OK";
             int code = 200;
 
             string user_token = TokenMaker.GetUserToken(request.Login, request.Password);
 
             int update_status = await Users.RegNewUser(request, user_token, _logger);
-
-
 
 
             if (update_status == 1)

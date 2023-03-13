@@ -11,6 +11,7 @@ service AuthorizeService{
 message SingInRequest{
   string login = 1;
   string password = 2;
+
 }
 
 message SingInByTokenRequest{
@@ -31,4 +32,5 @@ message UserResponse{
   string company = 9;
   string about =10;
   google.protobuf.Timestamp birth = 11;
+  bytes token = 12;
 }

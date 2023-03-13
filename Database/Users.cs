@@ -5,6 +5,7 @@ using Server.Services.Registration;
 using Npgsql;
 using Server.Backend;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Server.Services.Authorization;
 
 namespace Server.Database
 {
@@ -46,6 +47,46 @@ namespace Server.Database
             }
         }
 
+        public static Task<UserResponse> GetUserByLoginPassword(string login, string password, ILogger<Authorization> _logger)
+        {
+            using (IntacNetRuContext db = new IntacNetRuContext())
+            {
+
+                var selected_user = db.Users.Where(user => user.Login == login && user.Password == password).First();
+
+                if (selected_user == null)
+                {
+                    _logger.LogWarning("No such User");
+                    return Task.FromResult(new UserResponse()
+                    {
+                        State = "No such User",
+                        Code = 401,
+                    }) ;
+                }
+
+                var birth_date = selected_user.BirthDate.Value;
+                var birth_dateonly = new TimeSpan(birth_date.Year, birth_date.Month, birth_date.Day);
+
+                return Task.FromResult(new UserResponse
+                {
+                    State = "OK",
+                    Code = 200,
+
+                    UserType = GetUserType(selected_user),
+                    Login = login,
+                    Password = password,
+                    Company = selected_user.Company,
+                    About = selected_user.About == null ? "" : selected_user.About,
+                    Name = selected_user.Name,
+                    Surname = selected_user.Surname,
+                    Birth = new Google.Protobuf.WellKnownTypes.Timestamp()
+                    { Seconds = (long)birth_dateonly.TotalSeconds },
+                    Id = selected_user.Id
+
+                });
+            }
+        }
+
         private static async Task CreateUserPostTable(string user_token)
         {
             await using (var conn = new NpgsqlConnection(new ConfigManager().GetConnetion()))
@@ -59,8 +100,8 @@ namespace Server.Database
                            "MINVALUE 1 " +
                            "START 1 " +
                            $"OWNED BY user_posts_{user_token}.id --";
-                
-                
+
+
                 await conn.OpenAsync();
 
                 await using (var command = new NpgsqlCommand(create_table_cmd, conn))
@@ -75,5 +116,11 @@ namespace Server.Database
             }
         }
 
+        private static int GetUserType(User user)
+        {
+            if (user.Company == "")
+                return 0;
+            return 1;
+        }
     }
 }
