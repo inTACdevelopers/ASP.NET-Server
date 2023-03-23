@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Server.Backend
+namespace Server.Backend.Config
 {
     public class ConfigManager
     {

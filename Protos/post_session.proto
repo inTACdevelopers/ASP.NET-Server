@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "Server.Protos";
+
+import "Protos/base_types.proto";
+
+service postSessionsService{
+  rpc CreatePostSession (CreatePostSessionRequest) returns (basetypes.BaseResponse);
+  rpc DropPostSession (DropSessionRequest) returns (basetypes.BaseResponse);
+}
+
+
+message CreatePostSessionRequest{
+	 int32 user_id = 1;
+}
+
+message DropSessionRequest{
+	int32 user_id = 1;
+}
+

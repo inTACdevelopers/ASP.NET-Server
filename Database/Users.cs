@@ -7,6 +7,9 @@ using Server.Backend;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Server.Services.Authorization;
 using Basetypes;
+using Server.Backend.Config;
+using Server.Backend.Exeptions;
+using System.Diagnostics.Metrics;
 
 namespace Server.Database
 {
@@ -35,7 +38,7 @@ namespace Server.Database
                     await db.SaveChangesAsync();
 
 
-                 //   await CreateUserPostTable(user_token);
+                    //   await CreateUserPostTable(user_token);
                 }
                 catch (DbUpdateException ex)
                 {
@@ -62,7 +65,7 @@ namespace Server.Database
                     {
                         State = "No such User",
                         Code = 401,
-                    }) ;
+                    });
                 }
 
                 var birth_date = selected_user.BirthDate.Value;
@@ -133,9 +136,70 @@ namespace Server.Database
             return Task.FromResult(0);
         }
 
+        public static async Task CreateUserPostSession(int user_id)
+        {
+            string session_name = TokenMaker.GetPostSessionName(user_id);
+
+
+            string create_session_table_command = $"CREATE TABLE post_session_{session_name} " +
+            "AS SELECT * FROM posts ORDER BY weight DESC LIMIT 500 --";
+
+            string alter = $"ALTER TABLE post_session_{session_name} ADD COLUMN position serial --";
+
+            try
+            {
+                await using (var conn = new NpgsqlConnection(new ConfigManager().GetConnetion()))
+                {
+                    await conn.OpenAsync();
+
+                    await using (var command = new NpgsqlCommand(create_session_table_command, conn))
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+
+                    await using (var command = new NpgsqlCommand(alter, conn))
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new DataBaseExeption($"Error while creating {session_name} Post Session Table\n\nFull: {ex.Message}");
+            }
+        }
+
+        public static async Task DropUserPostSession(int user_id)
+        {
+            string session_name = TokenMaker.GetPostSessionName(user_id);
+
+            string drop_session_table = $"DROP TABLE post_session_{session_name}--";
+
+            try
+            {
+                await using (var conn = new NpgsqlConnection(new ConfigManager().GetConnetion()))
+                {
+                    await conn.OpenAsync();
+
+                    await using (var command = new NpgsqlCommand(drop_session_table, conn))
+                    {
+                        await command.ExecuteNonQueryAsync();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new DataBaseExeption($"Error while droping {session_name} Post Session Table\n\nFull: {ex.Message}");
+            }
+
+        }
+
         public static ICollection<Models.Post> GetAllUserPosts(User user)
         {
-            using(IntacNetRuContext db = new IntacNetRuContext()) 
+            using (IntacNetRuContext db = new IntacNetRuContext())
             {
                 return db.Users.Where(u => u.Id == user.Id).First().Posts;
             }

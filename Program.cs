@@ -1,6 +1,7 @@
 
 using Server.Services.Authorization;
 using Server.Services.Post;
+using Server.Services.Post_Session;
 using Server.Services.Registration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,5 +16,7 @@ app.MapGet("/", () => "This is INTAC");
 app.MapGrpcService<Authorization>();
 app.MapGrpcService<Registration>();
 app.MapGrpcService<PostMakerService>();
+app.MapGrpcService<Post_Session>();
+
 
 app.Run();

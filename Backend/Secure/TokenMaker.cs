@@ -29,5 +29,10 @@ namespace Server.Backend.Secure
         {
             return MakeSha256Hash(post.Id.ToString() + post.Title).Result;
         }
+
+        public static string GetPostSessionName(int user_id)
+        {
+             return MakeSha256Hash(user_id.ToString()).Result;
+        }
     }
 }
