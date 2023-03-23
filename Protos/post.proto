@@ -24,15 +24,19 @@ message makePostRequest{
   int32 user_id = 5;
 }
 
+message LikePostRequest{
+  int32 from_user = 1;
+  int32 post_id = 2;
+}
+
+message UnLikePostRequest{
+  int32 from_user = 1;
+  int32 post_id = 2;
+}
+
+
 message GetPostRequest{
 
 }
 
-message LikePostRequest{
-
-}
-
-message UnLikePostRequest{
-
-}
 

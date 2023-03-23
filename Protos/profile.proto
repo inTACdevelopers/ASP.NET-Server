@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option csharp_namespace = "Server.Protos";
+
+import "Protos/base_types.proto";
+
+service userUpdate{
+  rpc UpdateName(UpdateNameRequest) returns (basetypes.BaseResponse);
+  rpc UpdateLogin(UpdateLoginRequest) returns (basetypes.BaseResponse);
+  rpc UpdateAbout(UpdateAboutRequest) returns (basetypes.BaseResponse);
+  rpc UpdatePassword(UpdatePasswordRequest) returns (basetypes.BaseResponse);
+  rpc UpdatePhoto(UpdatePhotoRequest) returns (basetypes.BaseResponse);
+}
+
+message UpdateNameRequest{
+  int32 user_id = 1;
+  string name = 2;
+
+}
+
+message UpdateLoginRequest{
+  int32 user_id = 1;
+  string login = 2;
+}
+
+message UpdateAboutRequest{
+  int32 user_id = 1;
+  string about = 2;
+}
+
+message UpdatePasswordRequest{
+  int32 user_id = 1;
+  string password = 2;
+}
+
+message UpdatePhotoRequest{
+  int32 user_id = 1;
+  bytes photo_bytes = 2;
+}
+

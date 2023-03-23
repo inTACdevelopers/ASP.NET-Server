@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option csharp_namespace = "Server.Protos";
+
+import "Protos/base_types.proto";
+
+service userGetter{
+  rpc GetUser_ById(GetUserRequest) returns (basetypes.UserResponse);
+}
+
+message GetUserRequest{
+  int32 user_id = 1;
+}

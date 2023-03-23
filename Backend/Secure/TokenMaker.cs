@@ -25,9 +25,9 @@ namespace Server.Backend.Secure
             return MakeSha256Hash(login + password).Result;
         }
 
-        public static string GetPostToken(Post post)
+        public static string GetPostToken(int post_id, string post_title)
         {
-            return MakeSha256Hash(post.Id.ToString() + post.Title).Result;
+            return MakeSha256Hash(post_id.ToString() + post_title).Result;
         }
 
         public static string GetPostSessionName(int user_id)

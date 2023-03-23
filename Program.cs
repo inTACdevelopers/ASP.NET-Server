@@ -17,6 +17,6 @@ app.MapGrpcService<Authorization>();
 app.MapGrpcService<Registration>();
 app.MapGrpcService<PostMakerService>();
 app.MapGrpcService<Post_Session>();
-
+app.MapGrpcService<PostWorkerService>();
 
 app.Run();
